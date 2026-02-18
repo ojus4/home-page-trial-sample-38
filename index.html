@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>SOLVO — Your Career Operating System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Cormorant+Garamond:ital,wght@0,300;0,500;1,300;1,500;1,700&family=Outfit:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet"/>
+<style>
+/* ╔══════════════════════════════════════════════════╗
+   ║  SOLVO v3 — DARK AURORA CINEMA                  ║
+   ║  Design System Tokens                           ║
+   ╚══════════════════════════════════════════════════╝ */
+:root {
+  --void:      #04040A;
+  --deep:      #070710;
+  --surface:   #0C0C1A;
+  --card:      rgba(255,255,255,0.034);
+  --card-hov:  rgba(255,255,255,0.06);
+  --border:    rgba(255,255,255,0.07);
+  --border2:   rgba(255,255,255,0.14);
+  --text:      #F0EEF8;
+  --text2:     rgba(240,238,248,0.48);
+  --text3:     rgba(240,238,248,0.22);
+
+  /* Aurora palette */
+  --v:   #7B6EF6;   /* violet */
+  --g:   #00FFA3;   /* acid green */
+  --y:   #FFB800;   /* gold */
+  --r:   #FF4D6D;   /* coral */
+  --b:   #00C8FF;   /* electric blue */
+  --v2:  #A78BFA;   /* soft violet */
+
+  --font-hero: 'Bebas Neue', sans-serif;
+  --font-edit: 'Cormorant Garamond', Georgia, serif;
+  --font-body: 'Outfit', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --r-sm:  8px;
+  --r-md:  14px;
+  --r-lg:  20px;
+  --r-xl:  28px;
+  --r-2xl: 40px;
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --ease-out:    cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ── RESET ──────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body {
+  background: var(--void);
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+  cursor: none;
+}
+a { color: inherit; text-decoration: none; }
+button { border: none; cursor: none; font-family: var(--font-body); }
+
+/* ── SCROLLBAR ──────────────────────────────────── */
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: var(--void); }
+::-webkit-scrollbar-thumb { background: var(--v); border-radius: 2px; }
+
+/* ── SCROLL PROGRESS ────────────────────────────── */
+#progress-bar {
+  position: fixed; top: 0; left: 0; right: 0;
+  height: 2px; z-index: 9999;
+  background: linear-gradient(90deg, var(--v), var(--b), var(--g));
+  transform-origin: left;
+  transform: scaleX(0);
+  transition: transform 0.05s linear;
+}
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  AURORA BACKGROUND SYSTEM                       ║
+   ╚══════════════════════════════════════════════════╝ */
+.aurora-bg {
+  position: fixed; inset: 0; z-index: -3; overflow: hidden;
+  background: var(--void);
+}
+.aurora-layer {
+  position: absolute; border-radius: 50%;
+  filter: blur(100px);
+  animation: aurora-float linear infinite;
+  mix-blend-mode: screen;
+}
+.al1 { width:900px;height:600px;top:-200px;left:-200px;
+  background:radial-gradient(ellipse,rgba(123,110,246,0.35) 0%,transparent 70%);
+  animation-duration:22s; }
+.al2 { width:700px;height:700px;top:30%;right:-200px;
+  background:radial-gradient(ellipse,rgba(0,200,255,0.2) 0%,transparent 70%);
+  animation-duration:28s;animation-direction:reverse; }
+.al3 { width:600px;height:800px;bottom:-200px;left:20%;
+  background:radial-gradient(ellipse,rgba(0,255,163,0.12) 0%,transparent 70%);
+  animation-duration:18s;animation-delay:-7s; }
+.al4 { width:500px;height:500px;top:40%;left:40%;
+  background:radial-gradient(ellipse,rgba(255,75,109,0.12) 0%,transparent 70%);
+  animation-duration:24s;animation-delay:-12s; }
+@keyframes aurora-float {
+  0%   { transform:translate(0,0)   rotate(0deg)   scale(1); }
+  25%  { transform:translate(60px,-80px) rotate(90deg)  scale(1.1); }
+  50%  { transform:translate(-40px,60px) rotate(180deg) scale(0.9); }
+  75%  { transform:translate(80px,40px)  rotate(270deg) scale(1.05); }
+  100% { transform:translate(0,0)   rotate(360deg) scale(1); }
+}
+
+/* Mouse-tracked aurora glow */
+.cursor-glow {
+  position: fixed; width:600px; height:600px;
+  border-radius: 50%; pointer-events: none; z-index: -2;
+  background: radial-gradient(circle, rgba(123,110,246,0.12) 0%, transparent 65%);
+  transform: translate(-50%, -50%);
+  transition: left 0.12s ease, top 0.12s ease;
+  filter: blur(40px);
+}
+
+/* Grain texture */
+.grain {
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  opacity: 0.028;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px;
+}
+
+/* ── CUSTOM CURSOR ──────────────────────────────── */
+#cursor {
+  position: fixed; top: 0; left: 0;
+  pointer-events: none; z-index: 99999;
+}
+#cursor-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: white;
+  position: absolute; transform: translate(-50%,-50%);
+}
+#cursor-ring {
+  width: 32px; height: 32px; border-radius: 50%;
+  border: 1px solid rgba(123,110,246,0.6);
+  position: absolute; transform: translate(-50%,-50%);
+  transition: width 0.25s var(--ease-spring), height 0.25s var(--ease-spring),
+              border-color 0.2s, background 0.2s;
+}
+body.cursor-hover #cursor-ring {
+  width: 56px; height: 56px;
+  background: rgba(123,110,246,0.08);
+  border-color: rgba(123,110,246,0.9);
+}
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  UTILITY CLASSES                                ║
+   ╚══════════════════════════════════════════════════╝ */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 32px; }
+.section { padding: 120px 0; }
+.section-sm { padding: 80px 0; }
+
+/* Gradient text */
+.grad-text {
+  background: linear-gradient(135deg, var(--v2) 0%, var(--b) 50%, var(--g) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.grad-text-gold {
+  background: linear-gradient(135deg, var(--y) 0%, var(--r) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+
+/* Panel */
+.panel {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: var(--r-xl);
+  backdrop-filter: blur(16px);
+}
+.panel-glow {
+  background: rgba(123,110,246,0.04);
+  border: 1px solid rgba(123,110,246,0.18);
+  border-radius: var(--r-xl);
+  backdrop-filter: blur(20px);
+  box-shadow: 0 0 60px rgba(123,110,246,0.08), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+/* Label pill */
+.label-pill {
+  display: inline-flex; align-items: center; gap: 7px;
+  font-family: var(--font-mono); font-size: 11px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.1em;
+  color: var(--text2);
+  border: 1px solid var(--border2);
+  padding: 6px 14px; border-radius: var(--r-sm);
+  background: rgba(255,255,255,0.02);
+}
+.label-pill .pill-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+}
+
+/* Scroll reveal */
+.sr { opacity: 0; transform: translateY(32px);
+  transition: opacity 0.8s var(--ease-out), transform 0.8s var(--ease-out); }
+.sr.in { opacity: 1; transform: translateY(0); }
+.sr.left  { transform: translateX(-32px); }
+.sr.right { transform: translateX(32px); }
+.sr.left.in,.sr.right.in { transform: translateX(0); }
+.d1 { transition-delay: 0.1s; } .d2 { transition-delay: 0.2s; }
+.d3 { transition-delay: 0.3s; } .d4 { transition-delay: 0.4s; }
+.d5 { transition-delay: 0.5s; }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  NAVIGATION                                     ║
+   ╚══════════════════════════════════════════════════╝ */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+  padding: 20px 0; transition: all 0.3s;
+}
+nav.scrolled {
+  padding: 14px 0;
+  background: rgba(4,4,10,0.8);
+  backdrop-filter: blur(24px) saturate(1.5);
+  border-bottom: 1px solid var(--border);
+}
+.nav-inner {
+  max-width: 1200px; margin: 0 auto; padding: 0 32px;
+  display: flex; align-items: center; gap: 0;
+}
+.nav-logo {
+  font-family: var(--font-hero); font-size: 26px; letter-spacing: 0.02em;
+  display: flex; align-items: center; gap: 10px; margin-right: 56px;
+}
+.nav-logo-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: linear-gradient(135deg, var(--v), var(--b));
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 20px rgba(123,110,246,0.4);
+}
+.nav-logo-icon svg { width: 16px; height: 16px; }
+.nav-links { display: flex; align-items: center; gap: 2px; flex: 1; list-style: none; }
+.nav-links a {
+  font-size: 14px; font-weight: 400; color: var(--text2);
+  padding: 7px 16px; border-radius: 100px;
+  transition: color 0.2s, background 0.2s;
+}
+.nav-links a:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+.nav-right { display: flex; align-items: center; gap: 10px; }
+
+/* MAGNETIC BUTTON BASE */
+.btn-mag {
+  position: relative; display: inline-flex; align-items: center; gap: 8px;
+  font-family: var(--font-body); font-size: 14px; font-weight: 600;
+  padding: 10px 22px; border-radius: 100px;
+  border: none; cursor: none;
+  transition: transform 0.15s var(--ease-spring), box-shadow 0.15s;
+  will-change: transform;
+}
+.btn-ghost-nav {
+  background: transparent; color: var(--text2);
+  border: 1px solid var(--border2);
+}
+.btn-ghost-nav:hover { color: var(--text); border-color: rgba(255,255,255,0.3); }
+.btn-solid-nav {
+  background: var(--v); color: white;
+  box-shadow: 0 0 24px rgba(123,110,246,0.4);
+}
+.btn-solid-nav:hover { box-shadow: 0 0 40px rgba(123,110,246,0.6); }
+
+/* Big CTA buttons */
+.btn-xl {
+  font-size: 16px; padding: 16px 36px; border-radius: 100px;
+}
+.btn-aurora {
+  background: linear-gradient(135deg, var(--v) 0%, var(--b) 100%);
+  color: white;
+  box-shadow: 0 8px 40px rgba(123,110,246,0.4), 0 0 0 1px rgba(123,110,246,0.3);
+}
+.btn-aurora:hover { box-shadow: 0 12px 56px rgba(123,110,246,0.6), 0 0 0 1px rgba(123,110,246,0.5); }
+.btn-outline-xl {
+  background: transparent; color: var(--text);
+  border: 1px solid var(--border2);
+}
+.btn-outline-xl:hover { background: rgba(255,255,255,0.04); border-color: rgba(255,255,255,0.3); }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  HERO                                           ║
+   ╚══════════════════════════════════════════════════╝ */
+#hero {
+  position: relative; min-height: 100vh;
+  display: flex; align-items: center;
+  padding-top: 100px;
+  overflow: hidden;
+}
+
+/* Editorial section number backdrop */
+.section-num {
+  font-family: var(--font-hero); font-size: clamp(200px,20vw,320px);
+  color: rgba(255,255,255,0.018); line-height: 1;
+  position: absolute; top: 50%; transform: translateY(-50%);
+  left: -20px; pointer-events: none; user-select: none;
+  letter-spacing: -0.04em;
+}
+
+.hero-inner {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 60px; align-items: center;
+  position: relative; z-index: 2;
+  width: 100%;
+}
+
+.hero-left {}
+
+.hero-overline {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 30px;
+}
+.hero-overline-text {
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.15em;
+  text-transform: uppercase; color: var(--text3);
+}
+.hero-overline-line {
+  flex: 1; max-width: 60px; height: 1px;
+  background: linear-gradient(90deg, var(--v), transparent);
+}
+
+.hero-headline {
+  font-family: var(--font-hero);
+  font-size: clamp(72px, 9vw, 126px);
+  line-height: 0.94;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+.hero-headline .outline-text {
+  -webkit-text-stroke: 1.5px rgba(255,255,255,0.25);
+  color: transparent;
+}
+.hero-subhead {
+  font-family: var(--font-edit);
+  font-size: clamp(28px, 3.5vw, 46px);
+  font-style: italic; font-weight: 300;
+  color: var(--text2); margin-bottom: 28px;
+  line-height: 1.2;
+}
+.hero-desc {
+  font-size: 16px; font-weight: 300;
+  color: var(--text2); line-height: 1.75;
+  max-width: 440px; margin-bottom: 44px;
+}
+.hero-actions { display: flex; align-items: center; gap: 14px; margin-bottom: 56px; flex-wrap: wrap; }
+
+/* Stat pills row */
+.hero-stats {
+  display: flex; gap: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--r-md); overflow: hidden;
+  width: fit-content;
+}
+.hero-stat {
+  padding: 14px 24px; border-right: 1px solid var(--border);
+  text-align: center;
+}
+.hero-stat:last-child { border-right: none; }
+.hs-num {
+  font-family: var(--font-hero); font-size: 28px;
+  letter-spacing: 0.02em; line-height: 1;
+  margin-bottom: 3px;
+}
+.hs-lbl { font-size: 11px; color: var(--text3); font-weight: 400; }
+
+/* ── 3D FLOATING APP WINDOW ── */
+.hero-app-wrap {
+  position: relative; perspective: 1000px;
+}
+.hero-app {
+  border-radius: var(--r-xl);
+  background: rgba(12,12,26,0.95);
+  border: 1px solid var(--border2);
+  box-shadow: 0 40px 120px rgba(0,0,0,0.6), 0 0 80px rgba(123,110,246,0.12), inset 0 1px 0 rgba(255,255,255,0.08);
+  overflow: hidden;
+  transform-style: preserve-3d;
+  transition: transform 0.08s ease;
+  will-change: transform;
+}
+.app-titlebar {
+  background: rgba(255,255,255,0.03);
+  border-bottom: 1px solid var(--border);
+  padding: 13px 18px;
+  display: flex; align-items: center; gap: 14px;
+}
+.tls { display: flex; gap: 7px; }
+.tl { width: 12px; height: 12px; border-radius: 50%; }
+.tl-r { background: #FF5F57; } .tl-a { background: #FEBC2E; } .tl-g { background: #28C840; }
+.app-tb-title { font-family: var(--font-mono); font-size: 12px; color: var(--text3); }
+.app-tb-pill {
+  margin-left: auto; font-family: var(--font-mono); font-size: 10px;
+  color: var(--g); background: rgba(0,255,163,0.08);
+  border: 1px solid rgba(0,255,163,0.2); padding: 3px 9px; border-radius: 4px;
+  display: flex; align-items: center; gap: 5px;
+}
+.live-dot { width:5px;height:5px;border-radius:50%;background:var(--g);animation:pulse-g 2s infinite; }
+@keyframes pulse-g { 0%,100%{box-shadow:0 0 0 0 rgba(0,255,163,0.5)}50%{box-shadow:0 0 0 4px rgba(0,255,163,0)} }
+
+.app-body { display: flex; height: 380px; }
+.app-sidebar {
+  width: 176px; flex-shrink: 0;
+  border-right: 1px solid var(--border);
+  padding: 16px 10px; overflow: hidden;
+}
+.sb-section {
+  font-family: var(--font-mono); font-size: 9px; text-transform: uppercase;
+  letter-spacing: 0.12em; color: var(--text3); padding: 0 8px;
+  margin-top: 16px; margin-bottom: 6px;
+}
+.sb-section:first-child { margin-top: 0; }
+.sb-link {
+  display: flex; align-items: center; gap: 8px;
+  padding: 7px 10px; border-radius: 8px;
+  font-size: 12.5px; font-weight: 400; color: var(--text2);
+  margin-bottom: 1px; transition: all 0.15s;
+}
+.sb-link:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+.sb-link.active { background: rgba(123,110,246,0.12); color: var(--v2); }
+.sb-icon { width: 16px; text-align: center; font-size: 13px; opacity: 0.8; }
+.sb-badge {
+  margin-left: auto; font-family: var(--font-mono); font-size: 9px;
+  background: rgba(255,75,109,0.2); color: var(--r);
+  padding: 1px 6px; border-radius: 3px;
+}
+
+.app-content { flex: 1; padding: 18px; overflow: hidden; }
+.ac-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.ac-title { font-size: 16px; font-weight: 600; color: var(--text); }
+.ac-actions { display: flex; gap: 6px; }
+.ac-btn {
+  font-size: 11px; padding: 5px 12px; border-radius: 6px;
+  color: var(--text2); background: rgba(255,255,255,0.04);
+  border: 1px solid var(--border); cursor: none;
+  transition: all 0.15s;
+}
+.ac-btn:hover { background: rgba(255,255,255,0.08); color: var(--text); }
+.ac-btn.primary { background: var(--v); color: white; border-color: transparent; }
+
+/* Kanban inside app */
+.mini-kanban { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; height: calc(100% - 48px); }
+.mk-col {}
+.mk-col-head {
+  font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.1em; color: var(--text3);
+  display: flex; align-items: center; gap: 6px; margin-bottom: 8px; padding: 0 2px;
+}
+.mk-count {
+  width: 16px; height: 16px; border-radius: 4px;
+  background: rgba(255,255,255,0.06); color: var(--text3);
+  font-size: 9px; font-weight: 600;
+  display: flex; align-items: center; justify-content: center;
+}
+.mk-card {
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 10px; padding: 10px 12px; margin-bottom: 7px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.mk-card:hover { background: rgba(255,255,255,0.07); border-color: var(--border2); }
+.mk-card-title { font-size: 12px; color: var(--text); margin-bottom: 7px; font-weight: 500; }
+.mk-card-tags { display: flex; gap: 4px; flex-wrap: wrap; }
+.mk-tag {
+  font-size: 10px; padding: 2px 7px; border-radius: 4px; font-weight: 500;
+}
+
+/* Floating badges over app */
+.app-badge {
+  position: absolute;
+  background: rgba(12,12,26,0.95);
+  border: 1px solid var(--border2);
+  border-radius: var(--r-md); padding: 10px 14px;
+  display: flex; align-items: center; gap: 8px;
+  font-size: 12px; font-weight: 500;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px var(--border);
+  backdrop-filter: blur(16px);
+}
+.ab-1 { top: -18px; right: 40px; animation: badge-float1 5s ease-in-out infinite; }
+.ab-2 { bottom: 30px; left: -28px; animation: badge-float2 6s ease-in-out infinite; }
+@keyframes badge-float1 { 0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)} }
+@keyframes badge-float2 { 0%,100%{transform:translateY(0)}50%{transform:translateY(7px)} }
+.ab-icon { width: 28px; height: 28px; border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+
+/* Hero anim */
+@keyframes rise { from{opacity:0;transform:translateY(28px)}to{opacity:1;transform:translateY(0)} }
+.hero-overline  { animation: rise 0.7s 0.1s both var(--ease-out); }
+.hero-headline  { animation: rise 0.8s 0.2s both var(--ease-out); }
+.hero-subhead   { animation: rise 0.8s 0.3s both var(--ease-out); }
+.hero-desc      { animation: rise 0.7s 0.4s both var(--ease-out); }
+.hero-actions   { animation: rise 0.7s 0.5s both var(--ease-out); }
+.hero-stats     { animation: rise 0.7s 0.6s both var(--ease-out); }
+.hero-app-wrap  { animation: rise 0.9s 0.25s both var(--ease-out); }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  MARQUEE                                        ║
+   ╚══════════════════════════════════════════════════╝ */
+.marquee-wrap {
+  border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.012);
+  padding: 18px 0; overflow: hidden;
+}
+.marquee-track { display: flex; width: max-content; animation: marquee 30s linear infinite; }
+@keyframes marquee { from{transform:translateX(0)}to{transform:translateX(-50%)} }
+.marquee-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 0 32px; border-right: 1px solid var(--border);
+  font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em;
+  text-transform: uppercase; color: var(--text3); white-space: nowrap;
+}
+.marquee-item em { color: var(--v2); font-style: normal; font-weight: 500; }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  MANIFESTO SECTION                              ║
+   ╚══════════════════════════════════════════════════╝ */
+#manifesto {
+  padding: 120px 0;
+  border-bottom: 1px solid var(--border);
+  position: relative; overflow: hidden;
+}
+.manifesto-inner {
+  display: grid; grid-template-columns: 1fr 2fr;
+  gap: 80px; align-items: start;
+}
+.manifesto-left { padding-top: 8px; }
+.manifesto-number {
+  font-family: var(--font-hero); font-size: 200px; line-height: 1;
+  color: rgba(255,255,255,0.03); letter-spacing: -0.04em;
+  margin-bottom: -40px; user-select: none;
+}
+.manifesto-right {}
+.manifesto-quote {
+  font-family: var(--font-edit); font-size: clamp(32px,4vw,52px);
+  font-style: italic; font-weight: 300; line-height: 1.25;
+  letter-spacing: -0.02em; margin-bottom: 40px;
+  color: var(--text);
+}
+.manifesto-quote strong { font-style: normal; font-weight: 500; }
+.manifesto-pillars { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+.mp {
+  border-top: 1px solid var(--border);
+  padding-top: 20px;
+}
+.mp-num { font-family: var(--font-mono); font-size: 11px; color: var(--text3); margin-bottom: 8px; }
+.mp-title { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+.mp-body { font-size: 13px; color: var(--text2); line-height: 1.6; font-weight: 300; }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  FEATURES — Interactive Tab Switcher            ║
+   ╚══════════════════════════════════════════════════╝ */
+#features { position: relative; overflow: hidden; }
+
+.features-tabs {
+  display: flex; gap: 0;
+  border: 1px solid var(--border); border-radius: var(--r-md);
+  padding: 4px; background: rgba(255,255,255,0.02);
+  width: fit-content; margin: 0 auto 60px;
+}
+.ft-tab {
+  font-size: 13px; font-weight: 500; color: var(--text2);
+  padding: 9px 20px; border-radius: var(--r-sm);
+  background: transparent; border: none; cursor: none;
+  transition: all 0.2s; position: relative;
+}
+.ft-tab:hover { color: var(--text); }
+.ft-tab.active { background: rgba(123,110,246,0.15); color: var(--v2); }
+.ft-tab.active::after {
+  content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+  width: 16px; height: 2px; border-radius: 1px;
+  background: linear-gradient(90deg, var(--v), var(--b));
+}
+
+.feature-panels { position: relative; }
+.feature-panel { display: none; }
+.feature-panel.active { display: grid; grid-template-columns: 1fr 1.1fr; gap: 72px; align-items: center; }
+
+.fp-text {}
+.fp-chip {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-family: var(--font-mono); font-size: 10px; font-weight: 500;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  padding: 5px 12px; border-radius: 4px; margin-bottom: 20px;
+}
+.fp-title {
+  font-family: var(--font-hero); font-size: clamp(42px,5vw,64px);
+  line-height: 0.95; letter-spacing: 0.02em;
+  margin-bottom: 18px;
+}
+.fp-body { font-size: 16px; color: var(--text2); line-height: 1.75; font-weight: 300; margin-bottom: 28px; }
+.fp-list { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+.fp-list li { display: flex; gap: 12px; font-size: 14px; color: var(--text2); line-height: 1.5; }
+.fp-check { color: var(--g); font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+
+/* Feature visual panels */
+.fp-visual {
+  border-radius: var(--r-xl);
+  border: 1px solid var(--border2);
+  overflow: hidden;
+  background: rgba(12,12,26,0.95);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.5);
+}
+
+/* Radar chart visual */
+.radar-vis { padding: 32px; display: flex; flex-direction: column; align-items: center; }
+.radar-vis svg { width: 240px; height: 240px; }
+.radar-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 24px; width: 100%; }
+.rl-item { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text2); }
+.rl-bar-bg { flex: 1; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.06); overflow: hidden; }
+.rl-bar-fill { height: 100%; border-radius: 2px; }
+
+/* Job market visual */
+.intel-vis { padding: 24px; }
+.iv-row {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 0; border-bottom: 1px solid var(--border);
+}
+.iv-row:last-child { border-bottom: none; }
+.iv-rank { font-family: var(--font-mono); font-size: 11px; color: var(--text3); width: 20px; flex-shrink: 0; }
+.iv-name { font-size: 13px; font-weight: 500; flex: 1; }
+.iv-bar-bg { width: 100px; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.06); overflow: hidden; flex-shrink: 0; }
+.iv-bar-fill { height: 100%; border-radius: 3px; }
+.iv-val { font-family: var(--font-mono); font-size: 12px; width: 44px; text-align: right; flex-shrink: 0; }
+.iv-badge {
+  font-size: 9px; font-weight: 600; padding: 2px 6px; border-radius: 3px; flex-shrink: 0;
+}
+
+/* Resource visual */
+.res-vis { padding: 20px; }
+.rv-search {
+  display: flex; align-items: center; gap: 10px;
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border2);
+  border-radius: var(--r-md); padding: 12px 16px; margin-bottom: 16px;
+}
+.rv-search-text { font-size: 14px; color: var(--text2); flex: 1; }
+.rv-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 12px; border-radius: var(--r-md); margin-bottom: 6px;
+  background: rgba(255,255,255,0.03); border: 1px solid var(--border);
+  transition: background 0.15s;
+}
+.rv-item:hover { background: rgba(255,255,255,0.06); }
+.rv-platform { width: 34px; height: 34px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.rv-info { flex: 1; }
+.rv-title { font-size: 12px; font-weight: 500; color: var(--text); margin-bottom: 2px; }
+.rv-meta { font-size: 10px; color: var(--text3); }
+.rv-score { font-family: var(--font-mono); font-size: 13px; font-weight: 500; }
+
+/* Dashboard visual */
+.dash-vis { padding: 20px; }
+.dv-header { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; }
+.dv-title { font-size: 14px; font-weight: 600; flex: 1; }
+.dv-cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; }
+.dv-col { }
+.dv-col-h {
+  font-size: 10px; font-weight: 600; color: var(--text3);
+  text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 6px;
+  display: flex; align-items: center; gap: 5px;
+}
+.dv-task {
+  background: rgba(255,255,255,0.04); border: 1px solid var(--border);
+  border-radius: 8px; padding: 9px 10px; margin-bottom: 5px;
+  font-size: 11px; color: var(--text2); line-height: 1.4; border-left: 2px solid;
+  transition: all 0.15s;
+}
+.dv-task:hover { background: rgba(255,255,255,0.07); }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  STATS STRIP                                    ║
+   ╚══════════════════════════════════════════════════╝ */
+#stats-strip {
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(255,255,255,0.012);
+  padding: 0;
+}
+.ss-inner { display: grid; grid-template-columns: repeat(4,1fr); }
+.ss-stat {
+  padding: 48px 40px;
+  border-right: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  transition: background 0.3s;
+}
+.ss-stat:last-child { border-right: none; }
+.ss-stat:hover { background: rgba(255,255,255,0.02); }
+.ss-num {
+  font-family: var(--font-hero); font-size: 60px; line-height: 1;
+  letter-spacing: 0.02em; margin-bottom: 8px;
+}
+.ss-lbl { font-size: 13px; color: var(--text3); font-weight: 300; }
+.ss-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 2px; opacity: 0; transition: opacity 0.3s; }
+.ss-stat:hover .ss-bar { opacity: 1; }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  HOW IT WORKS — Editorial Steps                 ║
+   ╚══════════════════════════════════════════════════╝ */
+#how {
+  border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.steps-editorial { }
+.se-step {
+  display: grid; grid-template-columns: 80px 1fr;
+  gap: 40px; align-items: start;
+  padding: 64px 0; border-bottom: 1px solid var(--border);
+  position: relative;
+}
+.se-step:last-child { border-bottom: none; }
+.se-step::after {
+  content: ''; position: absolute; left: 39px; top: 0; bottom: 0;
+  width: 1px; background: var(--border); z-index: 0;
+}
+.se-step:first-child::after { top: 50%; }
+.se-step:last-child::after  { bottom: 50%; }
+.se-num {
+  font-family: var(--font-hero); font-size: 14px;
+  letter-spacing: 0.1em; color: var(--text3);
+  width: 80px; height: 80px; border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--deep); z-index: 1; flex-shrink: 0;
+  transition: all 0.3s;
+}
+.se-step:hover .se-num { border-color: var(--v); color: var(--v2); background: rgba(123,110,246,0.08); box-shadow: 0 0 30px rgba(123,110,246,0.2); }
+.se-content {}
+.se-title {
+  font-family: var(--font-hero); font-size: clamp(32px,4vw,52px);
+  letter-spacing: 0.02em; line-height: 1; margin-bottom: 12px;
+  transition: -webkit-text-fill-color 0.3s;
+}
+.se-step:hover .se-title { -webkit-text-fill-color: transparent; -webkit-text-stroke: 1px rgba(255,255,255,0.5); }
+.se-body { font-size: 15px; color: var(--text2); line-height: 1.7; font-weight: 300; max-width: 600px; }
+.se-tags { display: flex; gap: 6px; margin-top: 14px; flex-wrap: wrap; }
+.se-tag { font-family: var(--font-mono); font-size: 10px; color: var(--text3); border: 1px solid var(--border); padding: 4px 10px; border-radius: 4px; }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  TESTIMONIALS — Large Editorial                 ║
+   ╚══════════════════════════════════════════════════╝ */
+#testimonials { border-bottom: 1px solid var(--border); }
+.testi-large { display: flex; flex-direction: column; gap: 0; }
+.t-item {
+  display: grid; grid-template-columns: 1fr 2fr;
+  gap: 80px; padding: 64px 0;
+  border-bottom: 1px solid var(--border);
+  align-items: start;
+  transition: background 0.3s;
+}
+.t-item:last-child { border-bottom: none; }
+.t-item:hover { background: rgba(255,255,255,0.01); }
+.t-left {}
+.t-user { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.t-av {
+  width: 44px; height: 44px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 700; flex-shrink: 0;
+}
+.t-name { font-size: 15px; font-weight: 600; }
+.t-role { font-size: 13px; color: var(--text3); font-weight: 300; }
+.t-stars { font-size: 14px; letter-spacing: 2px; color: var(--y); }
+.t-feature { font-family: var(--font-mono); font-size: 10px; color: var(--text3); text-transform: uppercase; letter-spacing: 0.1em; margin-top: 16px; }
+.t-right {}
+.t-quote {
+  font-family: var(--font-edit); font-size: clamp(22px,2.5vw,32px);
+  font-style: italic; font-weight: 300; color: var(--text);
+  line-height: 1.45; letter-spacing: -0.01em;
+}
+.t-quote strong { font-style: normal; font-weight: 500; color: var(--v2); }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  PRICING                                        ║
+   ╚══════════════════════════════════════════════════╝ */
+#pricing { border-bottom: 1px solid var(--border); }
+.pricing-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.price-card {
+  border-radius: var(--r-xl); padding: 40px;
+  border: 1px solid var(--border);
+  position: relative; overflow: hidden;
+  transition: border-color 0.3s, transform 0.3s var(--ease-spring);
+}
+.price-card:hover { transform: translateY(-4px); }
+.pc-free { background: rgba(255,255,255,0.02); }
+.pc-free:hover { border-color: var(--border2); }
+.pc-premium {
+  background: linear-gradient(145deg, rgba(123,110,246,0.1) 0%, rgba(0,200,255,0.05) 100%);
+  border-color: rgba(123,110,246,0.3);
+  box-shadow: 0 0 60px rgba(123,110,246,0.08), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+.pc-premium:hover { border-color: rgba(123,110,246,0.5); }
+.pc-badge {
+  position: absolute; top: 24px; right: 24px;
+  font-family: var(--font-mono); font-size: 10px; text-transform: uppercase;
+  letter-spacing: 0.1em; padding: 4px 10px; border-radius: 4px;
+}
+.pc-tier { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text3); margin-bottom: 16px; }
+.pc-price { font-family: var(--font-hero); font-size: 80px; line-height: 1; letter-spacing: 0.02em; margin-bottom: 8px; }
+.pc-price-sub { font-size: 14px; color: var(--text2); margin-bottom: 32px; font-weight: 300; }
+.pc-features { list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+.pc-features li { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; color: var(--text2); font-weight: 300; }
+.pc-check { flex-shrink: 0; margin-top: 1px; }
+.pc-orb { position: absolute; pointer-events: none; border-radius: 50%; filter: blur(60px); }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  FINAL CTA                                      ║
+   ╚══════════════════════════════════════════════════╝ */
+#final-cta {
+  padding: 140px 0;
+  text-align: center; position: relative; overflow: hidden;
+}
+.cta-bg-text {
+  font-family: var(--font-hero); font-size: clamp(80px,15vw,200px);
+  color: rgba(255,255,255,0.015); line-height: 1; letter-spacing: -0.02em;
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+  white-space: nowrap; pointer-events: none; user-select: none; z-index: 0;
+}
+.cta-inner { position: relative; z-index: 1; }
+.cta-super {
+  font-family: var(--font-edit); font-size: clamp(14px,2vw,20px);
+  font-style: italic; color: var(--text3); margin-bottom: 20px; font-weight: 300;
+}
+.cta-title {
+  font-family: var(--font-hero); font-size: clamp(60px,9vw,128px);
+  line-height: 0.93; letter-spacing: -0.01em;
+  margin-bottom: 28px;
+}
+.cta-sub { font-size: 17px; color: var(--text2); margin-bottom: 48px; font-weight: 300; max-width: 480px; margin-left: auto; margin-right: auto; }
+.cta-buttons { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; margin-bottom: 24px; }
+.cta-note { font-family: var(--font-mono); font-size: 11px; color: var(--text3); letter-spacing: 0.08em; }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  FOOTER                                         ║
+   ╚══════════════════════════════════════════════════╝ */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 64px 0 36px;
+}
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 56px; margin-bottom: 56px;
+}
+.footer-logo {
+  font-family: var(--font-hero); font-size: 24px; letter-spacing: 0.02em;
+  display: flex; align-items: center; gap: 10px; margin-bottom: 14px;
+}
+.footer-desc { font-size: 13px; color: var(--text3); line-height: 1.65; max-width: 240px; font-weight: 300; }
+.footer-col-title { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text3); margin-bottom: 16px; }
+.footer-links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
+.footer-links a { font-size: 14px; color: var(--text2); font-weight: 300; transition: color 0.2s; }
+.footer-links a:hover { color: var(--v2); }
+.footer-bottom { border-top: 1px solid var(--border); padding-top: 28px; display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: var(--text3); }
+.footer-legal { display: flex; gap: 24px; }
+.footer-legal a { color: var(--text3); transition: color 0.2s; }
+.footer-legal a:hover { color: var(--text2); }
+
+/* ╔══════════════════════════════════════════════════╗
+   ║  RESPONSIVE                                     ║
+   ╚══════════════════════════════════════════════════╝ */
+@media (max-width: 1024px) {
+  .hero-inner { grid-template-columns: 1fr; }
+  .hero-app-wrap { display: none; }
+  .manifesto-inner { grid-template-columns: 1fr; gap: 32px; }
+  .manifesto-number { display: none; }
+  .feature-panel.active { grid-template-columns: 1fr; }
+  .t-item { grid-template-columns: 1fr; gap: 24px; }
+  .pricing-grid { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr 1fr; }
+  .ss-inner { grid-template-columns: 1fr 1fr; }
+  .nav-links { display: none; }
+  .steps-editorial .se-step { grid-template-columns: 1fr; padding: 40px 0; }
+  .se-step::after { display: none; }
+}
+@media (max-width: 640px) {
+  .container { padding: 0 20px; }
+  .manifesto-pillars { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; }
+  .ss-inner { grid-template-columns: 1fr; }
+  .hero-stats { flex-wrap: wrap; }
+}
+</style>
+</head>
+<body>
+
+<!-- ── BACKGROUNDS ── -->
+<div class="aurora-bg">
+  <div class="aurora-layer al1"></div>
+  <div class="aurora-layer al2"></div>
+  <div class="aurora-layer al3"></div>
+  <div class="aurora-layer al4"></div>
+</div>
+<div class="grain"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<div id="progress-bar"></div>
+
+<!-- ── CURSOR ── -->
+<div id="cursor">
+  <div id="cursor-dot"></div>
+  <div id="cursor-ring"></div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  NAV                                           ║
+     ╚══════════════════════════════════════════════════╝ -->
+<nav id="nav">
+  <div class="nav-inner">
+    <a href="#" class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 16 16" fill="none">
+          <path d="M8 1L15 5V11L8 15L1 11V5L8 1Z" fill="white" opacity="0.9"/>
+          <path d="M8 4.5L11.5 6.5V10.5L8 12.5L4.5 10.5V6.5L8 4.5Z" fill="white" opacity="0.25"/>
+        </svg>
+      </div>
+      SOLVO
+    </a>
+    <ul class="nav-links">
+      <li><a href="#manifesto">Why SOLVO</a></li>
+      <li><a href="#features">Features</a></li>
+      <li><a href="#how">How it works</a></li>
+      <li><a href="#testimonials">Reviews</a></li>
+      <li><a href="#pricing">Pricing</a></li>
+    </ul>
+    <div class="nav-right">
+      <button class="btn-mag btn-ghost-nav">Sign In</button>
+      <button class="btn-mag btn-solid-nav">Get Started Free →</button>
+    </div>
+  </div>
+</nav>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  HERO                                          ║
+     ╚══════════════════════════════════════════════════╝ -->
+<section id="hero">
+  <div class="section-num">01</div>
+  <div class="container">
+    <div class="hero-inner">
+      <!-- LEFT TEXT -->
+      <div class="hero-left">
+        <div class="hero-overline">
+          <span class="hero-overline-line"></span>
+          <span class="hero-overline-text">Career Operating System — Early Access</span>
+        </div>
+
+        <h1 class="hero-headline">
+          <span class="grad-text">ENGINEER</span><br>
+          <span class="outline-text">YOUR</span><br>
+          <span>CAREER.</span>
+        </h1>
+        <p class="hero-subhead">With data, direction,<br>and discipline.</p>
+
+        <p class="hero-desc">
+          The world's first all-in-one career OS. Psychometric intelligence, live job market data, curated learning paths, and a productivity dashboard that works on day one — nothing to configure.
+        </p>
+
+        <div class="hero-actions">
+          <button class="btn-mag btn-aurora btn-xl">Start for Free →</button>
+          <button class="btn-mag btn-outline-xl btn-xl">Watch Demo ▶</button>
+        </div>
+
+        <div class="hero-stats">
+          <div class="hero-stat">
+            <div class="hs-num grad-text" data-count="8">8<span style="font-family:var(--font-body);font-size:18px">+</span></div>
+            <div class="hs-lbl">Tools unified</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hs-num" style="color:var(--g)" data-count="500">500<span style="font-family:var(--font-body);font-size:18px">+</span></div>
+            <div class="hs-lbl">Resources</div>
+          </div>
+          <div class="hero-stat">
+            <div class="hs-num" style="color:var(--y)">₹99</div>
+            <div class="hs-lbl">Premium unlock</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: 3D FLOATING APP -->
+      <div class="hero-app-wrap">
+        <!-- Floating badges -->
+        <div class="app-badge ab-1">
+          <div class="ab-icon" style="background:rgba(0,255,163,0.1)">🎯</div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em">Career Match</div>
+            <div style="font-size:16px;font-family:var(--font-hero);letter-spacing:.05em;color:var(--g)">92% FIT</div>
+          </div>
+        </div>
+        <div class="app-badge ab-2">
+          <div class="ab-icon" style="background:rgba(255,184,0,0.1)">📈</div>
+          <div>
+            <div style="font-size:11px;color:var(--text3);font-family:var(--font-mono);text-transform:uppercase;letter-spacing:.1em">UI/UX Demand</div>
+            <div style="font-size:16px;font-family:var(--font-hero);letter-spacing:.05em;color:var(--y)">+28% YOY</div>
+          </div>
+        </div>
+
+        <div class="hero-app" id="heroApp">
+          <div class="app-titlebar">
+            <div class="tls"><div class="tl tl-r"></div><div class="tl tl-a"></div><div class="tl tl-g"></div></div>
+            <div class="app-tb-title">SOLVO Dashboard — Rahul Singh</div>
+            <div class="app-tb-pill"><div class="live-dot"></div> Live</div>
+          </div>
+          <div class="app-body">
+            <!-- Sidebar -->
+            <div class="app-sidebar">
+              <div class="sb-section">Workspace</div>
+              <div class="sb-link active"><span class="sb-icon">📋</span> Sprint Board</div>
+              <div class="sb-link"><span class="sb-icon">🎯</span> My Goals <span class="sb-badge">3</span></div>
+              <div class="sb-link"><span class="sb-icon">📈</span> Progress</div>
+              <div class="sb-section">Career</div>
+              <div class="sb-link"><span class="sb-icon">🗺️</span> Roadmap</div>
+              <div class="sb-link"><span class="sb-icon">🧠</span> My Profile</div>
+              <div class="sb-link"><span class="sb-icon">📊</span> Market Intel</div>
+              <div class="sb-section">Learn</div>
+              <div class="sb-link"><span class="sb-icon">🔍</span> Resources</div>
+              <div class="sb-link"><span class="sb-icon">📚</span> Saved (12)</div>
+            </div>
+            <!-- Main -->
+            <div class="app-content">
+              <div class="ac-header">
+                <div class="ac-title">Sprint 3 — UI/UX Track</div>
+                <div class="ac-actions">
+                  <button class="ac-btn">Filter</button>
+                  <button class="ac-btn">Group</button>
+                  <button class="ac-btn primary">+ Task</button>
+                </div>
+              </div>
+              <div class="mini-kanban">
+                <div class="mk-col">
+                  <div class="mk-col-head">Backlog <div class="mk-count">3</div></div>
+                  <div class="mk-card">
+                    <div class="mk-card-title">Typography Theory</div>
+                    <div class="mk-card-tags"><span class="mk-tag" style="background:rgba(123,110,246,0.15);color:var(--v2)">Study</span><span class="mk-tag" style="background:rgba(255,184,0,0.12);color:var(--y)">3h</span></div>
+                  </div>
+                  <div class="mk-card">
+                    <div class="mk-card-title">Usability Testing</div>
+                    <div class="mk-card-tags"><span class="mk-tag" style="background:rgba(123,110,246,0.15);color:var(--v2)">Study</span></div>
+                  </div>
+                  <div class="mk-card">
+                    <div class="mk-card-title">Portfolio Case Study</div>
+                    <div class="mk-card-tags"><span class="mk-tag" style="background:rgba(255,75,109,0.12);color:var(--r)">Milestone</span></div>
+                  </div>
+                </div>
+                <div class="mk-col">
+                  <div class="mk-col-head">In Progress <div class="mk-count" style="background:rgba(255,184,0,0.15);color:var(--y)">2</div></div>
+                  <div class="mk-card" style="border-left:2px solid var(--v)">
+                    <div class="mk-card-title">Figma Advanced Flows</div>
+                    <div class="mk-card-tags"><span class="mk-tag" style="background:rgba(0,200,255,0.1);color:var(--b)">Active</span><span class="mk-tag" style="background:rgba(255,184,0,0.12);color:var(--y)">6h</span></div>
+                  </div>
+                  <div class="mk-card" style="border-left:2px solid var(--b)">
+                    <div class="mk-card-title">User Research Methods</div>
+                    <div class="mk-card-tags"><span class="mk-tag" style="background:rgba(0,200,255,0.1);color:var(--b)">Active</span></div>
+                  </div>
+                </div>
+                <div class="mk-col">
+                  <div class="mk-col-head">Done <div class="mk-count" style="background:rgba(0,255,163,0.12);color:var(--g)">5</div></div>
+                  <div class="mk-card" style="opacity:0.5;border-left:2px solid var(--g)"><div class="mk-card-title">Design Thinking ✓</div></div>
+                  <div class="mk-card" style="opacity:0.5;border-left:2px solid var(--g)"><div class="mk-card-title">Figma Essentials ✓</div></div>
+                  <div class="mk-card" style="opacity:0.5;border-left:2px solid var(--g)"><div class="mk-card-title">Wireframing ✓</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── MARQUEE ── -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item"><em>Psychometric Engine</em> — Big Five Science</span>
+    <span class="marquee-item"><em>Career Aptitude Test</em> — CAT Style · 30 Qs</span>
+    <span class="marquee-item"><em>Interactive Roadmaps</em> — like roadmap.sh, personalised</span>
+    <span class="marquee-item"><em>Job Market Intelligence</em> — O*NET × LinkedIn</span>
+    <span class="marquee-item"><em>Resource Finder</em> — 500+ vetted sources</span>
+    <span class="marquee-item"><em>Productivity OS</em> — monday.com for individuals</span>
+    <span class="marquee-item"><em>Time Machine™</em> — Skill demand forecasts</span>
+    <span class="marquee-item"><em>Pre-filled Dashboard</em> — Ready on Day One</span>
+    <!-- dupe -->
+    <span class="marquee-item"><em>Psychometric Engine</em> — Big Five Science</span>
+    <span class="marquee-item"><em>Career Aptitude Test</em> — CAT Style · 30 Qs</span>
+    <span class="marquee-item"><em>Interactive Roadmaps</em> — like roadmap.sh, personalised</span>
+    <span class="marquee-item"><em>Job Market Intelligence</em> — O*NET × LinkedIn</span>
+    <span class="marquee-item"><em>Resource Finder</em> — 500+ vetted sources</span>
+    <span class="marquee-item"><em>Productivity OS</em> — monday.com for individuals</span>
+    <span class="marquee-item"><em>Time Machine™</em> — Skill demand forecasts</span>
+    <span class="marquee-item"><em>Pre-filled Dashboard</em> — Ready on Day One</span>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  MANIFESTO                                     ║
+     ╚══════════════════════════════════════════════════╝ -->
+<section id="manifesto">
+  <div class="container">
+    <div class="manifesto-inner">
+      <div class="manifesto-left sr">
+        <div class="manifesto-number">02</div>
+        <div class="label-pill"><span class="pill-dot" style="background:var(--v)"></span>Why Solvo</div>
+      </div>
+      <div class="manifesto-right">
+        <p class="manifesto-quote sr d1">
+          "Most career tools answer <strong>one</strong> question.<br>
+          SOLVO answers <strong class="grad-text">all of them</strong> —<br>
+          then helps you act on the answers."
+        </p>
+        <div class="manifesto-pillars">
+          <div class="mp sr d2">
+            <div class="mp-num">01 / Discover</div>
+            <div class="mp-title">Know yourself first.</div>
+            <div class="mp-body">Validated psychometrics + aptitude testing. Find which careers match your actual psychology, not just your interests.</div>
+          </div>
+          <div class="mp sr d3">
+            <div class="mp-num">02 / Navigate</div>
+            <div class="mp-title">See the whole map.</div>
+            <div class="mp-body">Live job market data, skill demand forecasts, and personalised roadmaps. Know where the market is going before you commit.</div>
+          </div>
+          <div class="mp sr d4">
+            <div class="mp-num">03 / Execute</div>
+            <div class="mp-title">Build the system.</div>
+            <div class="mp-body">A pre-built productivity dashboard — kanban, goals, sprints, charts — all synced to your roadmap. Open and use immediately.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  FEATURES                                      ║
+     ╚══════════════════════════════════════════════════╝ -->
+<section id="features" class="section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px" class="sr">
+      <div class="label-pill" style="margin:0 auto 14px;width:fit-content"><span class="pill-dot" style="background:var(--b)"></span>Platform Modules</div>
+      <h2 style="font-family:var(--font-hero);font-size:clamp(48px,6vw,80px);letter-spacing:0.02em;line-height:0.95">SIX MODULES.<br><span class="grad-text-gold">ONE SYSTEM.</span></h2>
+    </div>
+
+    <div class="features-tabs sr d1">
+      <button class="ft-tab active" data-tab="psychometric">🧠 Psychometric</button>
+      <button class="ft-tab" data-tab="aptitude">🎯 Aptitude</button>
+      <button class="ft-tab" data-tab="intelligence">📊 Intelligence</button>
+      <button class="ft-tab" data-tab="resources">🔍 Resources</button>
+      <button class="ft-tab" data-tab="dashboard">⚡ Dashboard</button>
+    </div>
+
+    <!-- Psychometric Panel -->
+    <div class="feature-panel active" data-panel="psychometric">
+      <div class="fp-text sr">
+        <div class="fp-chip" style="background:rgba(123,110,246,0.12);color:var(--v2);border:1px solid rgba(123,110,246,0.2)">✦ Psychometric Engine</div>
+        <div class="fp-title">BIG<br>FIVE.</div>
+        <p class="fp-body">50 scientifically validated questions. Weighted scoring across Openness, Conscientiousness, Extroversion, Agreeableness, and Neuroticism — with reverse-scored items for accuracy. Your radar chart becomes the foundation of every recommendation.</p>
+        <ul class="fp-list">
+          <li><span class="fp-check">✦</span> <span><strong style="color:var(--text)">Radar chart output</strong> — beautiful, precise, shareable</span></li>
+          <li><span class="fp-check">✦</span> <span><strong style="color:var(--text)">Career alignment engine</strong> — maps traits to role success predictors</span></li>
+          <li><span class="fp-check">✦</span> <span><strong style="color:var(--text)">Similar to Mindler & iDreamCareer</strong> — but integrated with your full dashboard</span></li>
+          <li><span class="fp-check">✦</span> <span><strong style="color:var(--text)">20 minutes</strong> — fast, validated, instant results</span></li>
+        </ul>
+      </div>
+      <div class="fp-visual sr d2">
+        <div class="radar-vis">
+          <svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid pentagons -->
+            <polygon points="120,20 215,75 215,165 120,220 25,165 25,75" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <polygon points="120,44 194,87 194,153 120,196 46,153 46,87" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <polygon points="120,68 173,99 173,141 120,172 67,141 67,99" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="1"/>
+            <polygon points="120,92 152,111 152,129 120,148 88,129 88,111" fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <!-- Axis lines -->
+            <line x1="120" y1="20" x2="120" y2="220" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="25" y1="75" x2="215" y2="165" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="215" y1="75" x2="25" y2="165" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <line x1="25" y1="120" x2="215" y2="120" stroke="rgba(255,255,255,0.04)" stroke-width="1"/>
+            <!-- Data polygon — Openness:88, Consc:76, Ext:54, Agree:70, Neur:32 -->
+            <polygon
+              points="120,29  207,82  186,152  72,162  36,92"
+              fill="rgba(123,110,246,0.14)"
+              stroke="url(#rg)" stroke-width="2" stroke-linejoin="round"/>
+            <defs>
+              <linearGradient id="rg" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stop-color="#7B6EF6"/>
+                <stop offset="100%" stop-color="#00C8FF"/>
+              </linearGradient>
+            </defs>
+            <!-- Data points -->
+            <circle cx="120" cy="29"  r="5" fill="#7B6EF6" filter="url(#glow)"/>
+            <circle cx="207" cy="82"  r="5" fill="#00C8FF"/>
+            <circle cx="186" cy="152" r="5" fill="#A78BFA"/>
+            <circle cx="72"  cy="162" r="5" fill="#00FFA3"/>
+            <circle cx="36"  cy="92"  r="5" fill="#FF4D6D"/>
+            <defs><filter id="glow"><feGaussianBlur stdDeviation="3" result="coloredBlur"/><feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
+            <!-- Labels -->
+            <text x="120" y="12" text-anchor="middle" fill="rgba(240,238,248,0.4)" font-family="JetBrains Mono, monospace" font-size="9" text-transform="uppercase">OPENNESS</text>
+            <text x="224" y="82" text-anchor="start"  fill="rgba(240,238,248,0.4)" font-family="JetBrains Mono, monospace" font-size="9">CONSC.</text>
+            <text x="198" y="162" text-anchor="start" fill="rgba(240,238,248,0.4)" font-family="JetBrains Mono, monospace" font-size="9">EXTRO.</text>
+            <text x="42"  y="172" text-anchor="end"   fill="rgba(240,238,248,0.4)" font-family="JetBrains Mono, monospace" font-size="9">AGREE.</text>
+            <text x="16"  y="92"  text-anchor="start" fill="rgba(240,238,248,0.4)" font-family="JetBrains Mono, monospace" font-size="9">NEUR.</text>
+            <!-- Score labels -->
+            <text x="120" y="26" text-anchor="middle" fill="#7B6EF6" font-family="JetBrains Mono, monospace" font-size="10" dy="-8">88</text>
+            <text x="207" y="80" text-anchor="start"  fill="#00C8FF" font-family="JetBrains Mono, monospace" font-size="10" dx="6">76</text>
+            <text x="186" y="152" text-anchor="start" fill="#A78BFA" font-family="JetBrains Mono, monospace" font-size="10" dx="6">54</text>
+            <text x="72"  y="162" text-anchor="end"   fill="#00FFA3" font-family="JetBrains Mono, monospace" font-size="10" dx="-6">70</text>
+            <text x="36"  y="92"  text-anchor="end"   fill="#FF4D6D" font-family="JetBrains Mono, monospace" font-size="10" dx="-6">32</text>
+          </svg>
+          <div class="radar-legend">
+            <div class="rl-item"><div class="rl-bar-bg"><div class="rl-bar-fill" style="width:88%;background:var(--v)"></div></div><span style="font-family:var(--font-mono);font-size:10px;color:var(--v2)">88</span></div>
+            <div class="rl-item"><div class="rl-bar-bg"><div class="rl-bar-fill" style="width:76%;background:var(--b)"></div></div><span style="font-family:var(--font-mono);font-size:10px;color:var(--b)">76</span></div>
+            <div class="rl-item"><div class="rl-bar-bg"><div class="rl-bar-fill" style="width:54%;background:var(--v2)"></div></div><span style="font-family:var(--font-mono);font-size:10px;color:var(--v2)">54</span></div>
+            <div class="rl-item"><div class="rl-bar-bg"><div class="rl-bar-fill" style="width:70%;background:var(--g)"></div></div><span style="font-family:var(--font-mono);font-size:10px;color:var(--g)">70</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Intelligence Panel -->
+    <div class="feature-panel" data-panel="intelligence">
+      <div class="fp-text sr">
+        <div class="fp-chip" style="background:rgba(0,255,163,0.08);color:var(--g);border:1px solid rgba(0,255,163,0.2)">✦ Career Intelligence</div>
+        <div class="fp-title" style="color:var(--g)">MARKET<br>TRUTH.</div>
+        <p class="fp-body">120+ roles. 200+ skills. Real demand scores, salary bands, top companies hiring, and a 3-year demand forecast we call the Time Machine™ — so you know where the market is heading, not just where it is today.</p>
+        <ul class="fp-list">
+          <li><span class="fp-check" style="color:var(--g)">✦</span> <span><strong style="color:var(--text)">O*NET-style database</strong> rebuilt for India's job market</span></li>
+          <li><span class="fp-check" style="color:var(--g)">✦</span> <span><strong style="color:var(--text)">LinkedIn-style hiring velocity</strong> by city and experience level</span></li>
+          <li><span class="fp-check" style="color:var(--g)">✦</span> <span><strong style="color:var(--text)">Time Machine™</strong> — 36-month skill demand forecast</span></li>
+          <li><span class="fp-check" style="color:var(--g)">✦</span> <span><strong style="color:var(--text)">Salary intelligence</strong> by role, city, and company tier</span></li>
+        </ul>
+      </div>
+      <div class="fp-visual sr d2">
+        <div class="intel-vis">
+          <div style="font-family:var(--font-mono);font-size:10px;text-transform:uppercase;letter-spacing:.12em;color:var(--text3);margin-bottom:14px">Top Roles by Demand Score</div>
+          <div class="iv-row">
+            <div class="iv-rank">01</div>
+            <div class="iv-name">DevOps / SRE</div>
+            <div class="iv-bar-bg"><div class="iv-bar-fill" style="width:95%;background:linear-gradient(90deg,var(--g),var(--b))"></div></div>
+            <div class="iv-val" style="color:var(--g)">95</div>
+            <div class="iv-badge" style="background:rgba(0,255,163,0.1);color:var(--g)">+42%</div>
+          </div>
+          <div class="iv-row">
+            <div class="iv-rank">02</div>
+            <div class="iv-name">Data Scientist</div>
+            <div class="iv-bar-bg"><div class="iv-bar-fill" style="width:92%;background:linear-gradient(90deg,var(--v),var(--b))"></div></div>
+            <div class="iv-val" style="color:var(--v2)">92</div>
+            <div class="iv-badge" style="background:rgba(123,110,246,0.1);color:var(--v2)">+34%</div>
+          </div>
+          <div class="iv-row">
+            <div class="iv-rank">03</div>
+            <div class="iv-name">UI/UX Designer</div>
+            <div class="iv-bar-bg"><div class="iv-bar-fill" style="width:88%;background:linear-gradient(90deg,var(--r),var(--y))"></div></div>
+            <div class="iv-val" style="color:var(--y)">88</div>
+            <div class="iv-badge" style="background:rgba(255,184,0,0.1);color:var(--y)">+28%</div>
+          </div>
+          <div class="iv-row">
+            <div class="iv-rank">04</div>
+            <div class="iv-name">Product Manager</div>
+            <div class="iv-bar-bg"><div class="iv-bar-fill" style="width:79%;background:linear-gradient(90deg,var(--b),var(--v))"></div></div>
+            <div class="iv-val" style="color:var(--b)">79</div>
+            <div class="iv-badge" style="background:rgba(0,200,255,0.1);color:var(--b)">+21%</div>
+          </div>
+          <div class="iv-row">
+            <div class="iv-rank">05</div>
+            <div class="iv-name">Full-Stack Eng.</div>
+            <div class="iv-bar-bg"><div class="iv-bar-fill" style="width:74%;background:linear-gradient(90deg,rgba(123,110,246,0.5),rgba(0,200,255,0.5))"></div></div>
+            <div class="iv-val" style="color:var(--text2)">74</div>
+            <div class="iv-badge" style="background:rgba(255,255,255,0.06);color:var(--text3)">+18%</div>
+          </div>
+          <div style="margin-top:16px;padding:14px;background:rgba(255,184,0,0.06);border:1px solid rgba(255,184,0,0.15);border-radius:var(--r-md)">
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--y);margin-bottom:6px;letter-spacing:.1em;text-transform:uppercase">⏰ Time Machine™ — 2027 Forecast</div>
+            <div style="font-size:13px;color:var(--text2);line-height:1.55;font-weight:300">AI-augmented design tools will reshape 60% of junior UI/UX tasks. High demand for designers who can <span style="color:var(--text);font-weight:500">prompt, critique, and prototype AI-generated interfaces.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resources Panel -->
+    <div class="feature-panel" data-panel="resources">
+      <div class="fp-text sr">
+        <div class="fp-chip" style="background:rgba(255,184,0,0.08);color:var(--y);border:1px solid rgba(255,184,0,0.2)">✦ Resource Finder</div>
+        <div class="fp-title" style="color:var(--y)">FIND<br>BEST.<br>LEARN.</div>
+        <p class="fp-body">500+ hand-vetted resources across every major learning platform. Search by skill, filter by platform, cost, duration, and difficulty — and get a relevance score so the single best resource for your exact need always floats to the top.</p>
+        <ul class="fp-list">
+          <li><span class="fp-check" style="color:var(--y)">✦</span> <span><strong style="color:var(--text)">YouTube, Coursera, Udemy, NPTEL, Great Learning</strong> and 12 more platforms</span></li>
+          <li><span class="fp-check" style="color:var(--y)">✦</span> <span><strong style="color:var(--text)">Relevance scoring</strong> — 0-100 match to your specific query and level</span></li>
+          <li><span class="fp-check" style="color:var(--y)">✦</span> <span><strong style="color:var(--text)">Free-first filtering</strong> — always show zero-cost options at the top</span></li>
+        </ul>
+      </div>
+      <div class="fp-visual sr d2">
+        <div class="res-vis">
+          <div class="rv-search">
+            <span style="font-size:15px;opacity:0.5">🔍</span>
+            <div class="rv-search-text">Figma for UI/UX Beginners</div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--y);background:rgba(255,184,0,0.1);border:1px solid rgba(255,184,0,0.2);padding:4px 9px;border-radius:4px">Free Only</div>
+          </div>
+          <div class="rv-item">
+            <div class="rv-platform" style="background:rgba(255,0,0,0.1)">▶️</div>
+            <div class="rv-info">
+              <div class="rv-title">Figma Full Course for Beginners — YouTube</div>
+              <div class="rv-meta">YouTube · Free · 6.5 hrs · Beginner · ⭐ 4.9</div>
+            </div>
+            <div class="rv-score" style="color:var(--g)">98</div>
+          </div>
+          <div class="rv-item">
+            <div class="rv-platform" style="background:rgba(0,86,210,0.1)">📘</div>
+            <div class="rv-info">
+              <div class="rv-title">UI/UX Bootcamp with Figma — Coursera</div>
+              <div class="rv-meta">Coursera · Free Audit · 8 hrs · Univ. of Michigan</div>
+            </div>
+            <div class="rv-score" style="color:var(--b)">94</div>
+          </div>
+          <div class="rv-item">
+            <div class="rv-platform" style="background:rgba(0,255,163,0.06)">🎓</div>
+            <div class="rv-info">
+              <div class="rv-title">Figma & UX Fundamentals — Great Learning</div>
+              <div class="rv-meta">Great Learning · Free · 4 hrs · Certificate</div>
+            </div>
+            <div class="rv-score" style="color:var(--v2)">91</div>
+          </div>
+          <div class="rv-item" style="opacity:0.45">
+            <div class="rv-platform" style="background:rgba(255,184,0,0.08)">🎯</div>
+            <div class="rv-info">
+              <div class="rv-title">Complete Figma Masterclass — Udemy</div>
+              <div class="rv-meta">Udemy · ₹499 · 12 hrs · Bestseller</div>
+            </div>
+            <div class="rv-score" style="color:var(--y)">89</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dashboard Panel -->
+    <div class="feature-panel" data-panel="dashboard">
+      <div class="fp-text sr">
+        <div class="fp-chip" style="background:rgba(255,75,109,0.08);color:var(--r);border:1px solid rgba(255,75,109,0.2)">✦ Productivity OS</div>
+        <div class="fp-title" style="-webkit-text-stroke:1px rgba(255,75,109,0.6);color:transparent">READY<br>DAY<br>ONE.</div>
+        <p class="fp-body">A full productivity dashboard inspired by monday.com and ClickUp — but rebuilt for a single individual. Every board, every goal, every sprint pre-populated from your roadmap. Like Notion, but with everything already done.</p>
+        <ul class="fp-list">
+          <li><span class="fp-check" style="color:var(--r)">✦</span> <span><strong style="color:var(--text)">Kanban boards</strong> with roadmap milestones auto-loaded as tasks</span></li>
+          <li><span class="fp-check" style="color:var(--r)">✦</span> <span><strong style="color:var(--text)">SMART goals</strong> — weekly, monthly, quarterly auto-generated</span></li>
+          <li><span class="fp-check" style="color:var(--r)">✦</span> <span><strong style="color:var(--text)">Agile sprints</strong> — velocity charts and retrospective prompts</span></li>
+          <li><span class="fp-check" style="color:var(--r)">✦</span> <span><strong style="color:var(--text)">Live charts</strong> — skill progress, streak, weekly activity sparklines</span></li>
+        </ul>
+      </div>
+      <div class="fp-visual sr d2">
+        <div class="dash-vis">
+          <div class="dv-header">
+            <div class="dv-title">Sprint 3 — UI/UX Track</div>
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--g)">● 2 active</div>
+          </div>
+          <div class="dv-cols">
+            <div class="dv-col">
+              <div class="dv-col-h"><span style="width:6px;height:6px;border-radius:50%;background:var(--text3);display:inline-block"></span> Backlog (3)</div>
+              <div class="dv-task" style="border-left-color:var(--text3)">Typography Theory</div>
+              <div class="dv-task" style="border-left-color:var(--text3)">Usability Testing</div>
+              <div class="dv-task" style="border-left-color:var(--r)">Portfolio Case Study 🏆</div>
+            </div>
+            <div class="dv-col">
+              <div class="dv-col-h"><span style="width:6px;height:6px;border-radius:50%;background:var(--y);display:inline-block"></span> In Progress (2)</div>
+              <div class="dv-task" style="border-left-color:var(--v)">Figma Advanced Flows</div>
+              <div class="dv-task" style="border-left-color:var(--b)">User Research Methods</div>
+            </div>
+            <div class="dv-col">
+              <div class="dv-col-h"><span style="width:6px;height:6px;border-radius:50%;background:var(--g);display:inline-block"></span> Done (5)</div>
+              <div class="dv-task" style="border-left-color:var(--g);opacity:0.55">Design Thinking ✓</div>
+              <div class="dv-task" style="border-left-color:var(--g);opacity:0.55">Figma Essentials ✓</div>
+              <div class="dv-task" style="border-left-color:var(--g);opacity:0.55">Wireframing ✓</div>
+            </div>
+          </div>
+          <div style="margin-top:14px;padding:12px;background:rgba(255,255,255,0.03);border-radius:var(--r-md);border:1px solid var(--border)">
+            <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);margin-bottom:8px">Sprint Velocity</div>
+            <div style="display:flex;align-items:flex-end;gap:4px;height:36px">
+              <div style="flex:1;background:rgba(123,110,246,0.2);border-radius:3px 3px 0 0;height:40%"></div>
+              <div style="flex:1;background:rgba(123,110,246,0.2);border-radius:3px 3px 0 0;height:60%"></div>
+              <div style="flex:1;background:rgba(123,110,246,0.3);border-radius:3px 3px 0 0;height:50%"></div>
+              <div style="flex:1;background:rgba(123,110,246,0.4);border-radius:3px 3px 0 0;height:80%"></div>
+              <div style="flex:1;background:rgba(123,110,246,0.5);border-radius:3px 3px 0 0;height:90%"></div>
+              <div style="flex:1;background:var(--v);border-radius:3px 3px 0 0;height:100%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Aptitude panel -->
+    <div class="feature-panel" data-panel="aptitude">
+      <div class="fp-text sr">
+        <div class="fp-chip" style="background:rgba(0,200,255,0.08);color:var(--b);border:1px solid rgba(0,200,255,0.2)">✦ Aptitude Engine</div>
+        <div class="fp-title" style="color:var(--b)">TEST<br>YOUR<br>EDGE.</div>
+        <p class="fp-body">30 CAT-style questions across Numerical, Creative, and Verbal reasoning. Adaptive scoring with a full breakdown by category. Takes 25 minutes — results are instant and stored in your profile forever.</p>
+        <ul class="fp-list">
+          <li><span class="fp-check" style="color:var(--b)">✦</span> <span><strong style="color:var(--text)">30 MCQs</strong> — 10 Numerical, 10 Creative, 10 Verbal</span></li>
+          <li><span class="fp-check" style="color:var(--b)">✦</span> <span><strong style="color:var(--text)">CAT-style scoring</strong> with category breakdown</span></li>
+          <li><span class="fp-check" style="color:var(--b)">✦</span> <span><strong style="color:var(--text)">Career routing</strong> — results update your roadmap and match score</span></li>
+        </ul>
+      </div>
+      <div class="fp-visual sr d2" style="padding:28px">
+        <div style="font-family:var(--font-mono);font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.12em;margin-bottom:20px">Score Breakdown</div>
+        <div style="display:flex;gap:16px;justify-content:center;margin-bottom:24px">
+          <div style="text-align:center">
+            <div style="position:relative;width:100px;height:100px;margin:0 auto 8px">
+              <svg viewBox="0 0 100 100" width="100" height="100" style="transform:rotate(-90deg)">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--b)" stroke-width="8" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="52" opacity="0.9"/>
+              </svg>
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-hero);font-size:22px;color:var(--b)">8</div>
+            </div>
+            <div style="font-size:12px;color:var(--text2)">Numerical</div>
+          </div>
+          <div style="text-align:center">
+            <div style="position:relative;width:100px;height:100px;margin:0 auto 8px">
+              <svg viewBox="0 0 100 100" width="100" height="100" style="transform:rotate(-90deg)">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--r)" stroke-width="8" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="26" opacity="0.9"/>
+              </svg>
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-hero);font-size:22px;color:var(--r)">9</div>
+            </div>
+            <div style="font-size:12px;color:var(--text2)">Creative</div>
+          </div>
+          <div style="text-align:center">
+            <div style="position:relative;width:100px;height:100px;margin:0 auto 8px">
+              <svg viewBox="0 0 100 100" width="100" height="100" style="transform:rotate(-90deg)">
+                <circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="8"/>
+                <circle cx="50" cy="50" r="42" fill="none" stroke="var(--g)" stroke-width="8" stroke-linecap="round" stroke-dasharray="263.9" stroke-dashoffset="79" opacity="0.9"/>
+              </svg>
+              <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:var(--font-hero);font-size:22px;color:var(--g)">7</div>
+            </div>
+            <div style="font-size:12px;color:var(--text2)">Verbal</div>
+          </div>
+        </div>
+        <div style="text-align:center;font-family:var(--font-hero);font-size:48px;color:var(--text);letter-spacing:.02em">25<span style="font-size:20px;color:var(--text2);font-family:var(--font-body)">/30</span></div>
+        <div style="text-align:center;font-size:13px;color:var(--text3);margin-top:4px">83rd percentile overall</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── STATS STRIP ── -->
+<div id="stats-strip">
+  <div class="ss-inner container" style="max-width:100%;padding:0">
+    <div class="ss-stat sr">
+      <div class="ss-num grad-text"><span class="count-num" data-target="8">0</span>+</div>
+      <div class="ss-lbl">Integrated career tools</div>
+      <div class="ss-bar" style="background:linear-gradient(90deg,var(--v),var(--b))"></div>
+    </div>
+    <div class="ss-stat sr d1">
+      <div class="ss-num" style="color:var(--g)"><span class="count-num" data-target="500">0</span>+</div>
+      <div class="ss-lbl">Vetted learning resources</div>
+      <div class="ss-bar" style="background:linear-gradient(90deg,var(--g),var(--b))"></div>
+    </div>
+    <div class="ss-stat sr d2">
+      <div class="ss-num" style="color:var(--y)"><span class="count-num" data-target="120">0</span>+</div>
+      <div class="ss-lbl">Job roles tracked live</div>
+      <div class="ss-bar" style="background:linear-gradient(90deg,var(--y),var(--r))"></div>
+    </div>
+    <div class="ss-stat sr d3">
+      <div class="ss-num grad-text-gold">₹99</div>
+      <div class="ss-lbl">One-time Premium unlock</div>
+      <div class="ss-bar" style="background:linear-gradient(90deg,var(--y),var(--r))"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  HOW IT WORKS                                  ║
+     ╚══════════════════════════════════════════════════╝ -->
+<section id="how" class="section">
+  <div class="container">
+    <div style="margin-bottom:64px" class="sr">
+      <div class="label-pill" style="margin-bottom:14px"><span class="pill-dot" style="background:var(--y)"></span>The Process</div>
+      <h2 style="font-family:var(--font-hero);font-size:clamp(52px,7vw,88px);letter-spacing:0.02em;line-height:0.93">FROM UNCERTAIN<br><span class="outline-text" style="-webkit-text-stroke:1px rgba(255,255,255,0.2)">TO UNSTOPPABLE.</span></h2>
+    </div>
+    <div class="steps-editorial">
+      <div class="se-step sr">
+        <div class="se-num">01</div>
+        <div class="se-content">
+          <div class="se-title">ASSESS YOURSELF.</div>
+          <div class="se-body">Complete the 50-question Big Five psychometric test and the 30-question CAT-style aptitude assessment. Takes 20 minutes. Results are instant — your personality radar chart and aptitude breakdown are generated immediately.</div>
+          <div class="se-tags"><span class="se-tag">20 minutes</span><span class="se-tag">Big Five</span><span class="se-tag">CAT Aptitude</span><span class="se-tag">Instant Results</span></div>
+        </div>
+      </div>
+      <div class="se-step sr d1">
+        <div class="se-num">02</div>
+        <div class="se-content">
+          <div class="se-title">FIND YOUR PATH.</div>
+          <div class="se-body">Your scores unlock your career match — a percentage fit score for every role in our database. Browse job market intelligence: demand signals, salary bands, required skills, and where that role is heading over the next 3 years.</div>
+          <div class="se-tags"><span class="se-tag">Career Match Score</span><span class="se-tag">Live Market Data</span><span class="se-tag">Time Machine™</span></div>
+        </div>
+      </div>
+      <div class="se-step sr d2">
+        <div class="se-num">03</div>
+        <div class="se-content">
+          <div class="se-title">GET YOUR ROADMAP.</div>
+          <div class="se-body">A personalised, visual, interactive roadmap is generated for your chosen career path. Each milestone node links to the single best learning resource for that skill. Ranked, scored, and curated from 500+ verified sources.</div>
+          <div class="se-tags"><span class="se-tag">Interactive Roadmap</span><span class="se-tag">Skill-by-Skill</span><span class="se-tag">Best Resource per Node</span></div>
+        </div>
+      </div>
+      <div class="se-step sr d3">
+        <div class="se-num">04</div>
+        <div class="se-content">
+          <div class="se-title">EXECUTE IN THE OS.</div>
+          <div class="se-body">Your productivity dashboard is pre-built and pre-populated. Kanban board loaded with your roadmap as tasks. Goals set. Sprint planned. Performance charts ready. You open it and start working — no setup, no configuration, no blank canvas.</div>
+          <div class="se-tags"><span class="se-tag">Kanban</span><span class="se-tag">SMART Goals</span><span class="se-tag">OKRs</span><span class="se-tag">Zero Setup</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  TESTIMONIALS                                  ║
+     ╚══════════════════════════════════════════════════╝ -->
+<section id="testimonials" class="section">
+  <div class="container">
+    <div style="margin-bottom:64px" class="sr">
+      <div class="label-pill" style="margin-bottom:14px"><span class="pill-dot" style="background:var(--r)"></span>Early Users</div>
+      <h2 style="font-family:var(--font-hero);font-size:clamp(48px,6vw,80px);letter-spacing:0.02em;line-height:0.93">PEOPLE WHO<br><span class="grad-text">GET IT.</span></h2>
+    </div>
+    <div class="testi-large">
+      <div class="t-item sr">
+        <div class="t-left">
+          <div class="t-user">
+            <div class="t-av" style="background:linear-gradient(135deg,var(--v),var(--b));color:white">P</div>
+            <div>
+              <div class="t-name">Priya Mehta</div>
+              <div class="t-role">B.Tech CSE · IIT Bombay</div>
+            </div>
+          </div>
+          <div class="t-stars">★★★★★</div>
+          <div class="t-feature" style="margin-top:16px;font-size:10px">Used: Psychometric + Roadmap</div>
+        </div>
+        <div class="t-right">
+          <p class="t-quote">"I've tried Mindler, iDreamCareer, 16Personalities, and a dozen Notion templates. Nothing connected <strong>'what should I do'</strong> with <strong>'how do I do it'</strong> and <strong>'am I on track'</strong> in one place. SOLVO is the first platform that makes all three work together — and the dashboard was ready to use the moment I signed up."</p>
+        </div>
+      </div>
+      <div class="t-item sr d1">
+        <div class="t-left">
+          <div class="t-user">
+            <div class="t-av" style="background:linear-gradient(135deg,var(--g),var(--b));color:var(--void)">A</div>
+            <div>
+              <div class="t-name">Arjun Sharma</div>
+              <div class="t-role">Junior Developer · Pune</div>
+            </div>
+          </div>
+          <div class="t-stars">★★★★★</div>
+          <div class="t-feature" style="margin-top:16px;font-size:10px">Used: Dashboard + Time Machine™</div>
+        </div>
+        <div class="t-right">
+          <p class="t-quote">"The pre-filled Kanban board saved me 6 hours of setup. I opened the dashboard and it <strong>already had my roadmap broken into tasks</strong> — I just moved the first card to 'In Progress.' The Time Machine™ helped me pivot from Android to Flutter at exactly the right moment in the hiring cycle."</p>
+        </div>
+      </div>
+      <div class="t-item sr d2">
+        <div class="t-left">
+          <div class="t-user">
+            <div class="t-av" style="background:linear-gradient(135deg,var(--y),var(--r));color:white">S</div>
+            <div>
+              <div class="t-name">Sneha Iyer</div>
+              <div class="t-role">Career Counsellor · Bangalore</div>
+            </div>
+          </div>
+          <div class="t-stars">★★★★★</div>
+          <div class="t-feature" style="margin-top:16px;font-size:10px">Used: Resource Finder + Intelligence</div>
+        </div>
+        <div class="t-right">
+          <p class="t-quote">"The resource finder is <strong>genuinely brilliant</strong> — not just a search engine. I typed 'learn SQL for data science' and in seconds I had a ranked list with relevance scores. As a career counsellor I recommend platforms daily, and SOLVO is the first one I've seen that actually integrates assessment, roadmapping, and learning in a way that makes sense."</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  PRICING                                       ║
+     ╚══════════════════════════════════════════════════╝ -->
+<section id="pricing" class="section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:56px" class="sr">
+      <div class="label-pill" style="margin:0 auto 14px;width:fit-content"><span class="pill-dot" style="background:var(--v)"></span>Pricing</div>
+      <h2 style="font-family:var(--font-hero);font-size:clamp(52px,7vw,88px);letter-spacing:0.02em;line-height:0.93">SIMPLE.<br><span class="grad-text">HONEST.</span></h2>
+    </div>
+    <div class="pricing-grid">
+      <!-- Free -->
+      <div class="price-card pc-free sr">
+        <div class="pc-tier">Free Forever</div>
+        <div class="pc-price">₹0</div>
+        <div class="pc-price-sub">No credit card. No expiry. Always free.</div>
+        <ul class="pc-features">
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Full Psychometric Assessment (Big Five)</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Career Match Score & Radar Chart</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Browse Job Market Data (preview)</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Basic Dashboard (kanban + to-do)</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Search Resource Finder (50 results)</li>
+          <li><span class="pc-check" style="color:var(--text3)">○</span> <span style="color:var(--text3)">Full Interactive Roadmap (locked)</span></li>
+          <li><span class="pc-check" style="color:var(--text3)">○</span> <span style="color:var(--text3)">Aptitude Test (locked)</span></li>
+          <li><span class="pc-check" style="color:var(--text3)">○</span> <span style="color:var(--text3)">Time Machine™ (locked)</span></li>
+        </ul>
+        <button class="btn-mag btn-outline-xl" style="width:100%">Get Started Free</button>
+      </div>
+      <!-- Premium -->
+      <div class="price-card pc-premium sr d1">
+        <div class="pc-badge" style="background:rgba(123,110,246,0.15);color:var(--v2);border:1px solid rgba(123,110,246,0.25)">✦ BEST VALUE</div>
+        <div class="pc-orb" style="width:300px;height:300px;top:-150px;right:-100px;background:radial-gradient(circle,rgba(123,110,246,0.15),transparent)"></div>
+        <div class="pc-tier" style="color:var(--v2)">Premium — One Time</div>
+        <div class="pc-price grad-text">₹99</div>
+        <div class="pc-price-sub">One-time payment. Lifetime access. No subscription ever.</div>
+        <ul class="pc-features">
+          <li><span class="pc-check" style="color:var(--g)">✓</span> <strong style="color:var(--text)">Everything in Free</strong></li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Full Interactive Career Roadmap (React Flow)</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> CAT-Style Aptitude Test (30 Qs)</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Time Machine™ — 3-year forecasts</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Full Resource Library (500+ resources)</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Full Productivity Dashboard (all features)</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> 1-on-1 Gmeet Booking (Calendly)</li>
+          <li><span class="pc-check" style="color:var(--g)">✓</span> Lifetime updates included</li>
+        </ul>
+        <button class="btn-mag btn-aurora btn-xl" style="width:100%">Unlock Premium for ₹99 →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  FINAL CTA                                     ║
+     ╚══════════════════════════════════════════════════╝ -->
+<section id="final-cta">
+  <div class="cta-bg-text">BUILD IT.</div>
+  <div class="container cta-inner">
+    <p class="cta-super sr">"Every great career was engineered, not discovered."</p>
+    <h2 class="cta-title sr d1">
+      START<br>
+      <span class="grad-text">TODAY.</span>
+    </h2>
+    <p class="cta-sub sr d2">Join 2,400+ students and professionals who stopped guessing and started building their career with data, direction, and discipline.</p>
+    <div class="cta-buttons sr d3">
+      <button class="btn-mag btn-aurora btn-xl">Create Free Account — 2 Minutes →</button>
+      <button class="btn-mag btn-outline-xl btn-xl">Explore the Platform</button>
+    </div>
+    <div class="cta-note sr d4">FREE FOREVER · NO CREDIT CARD · PREMIUM AT ₹99 ONE-TIME</div>
+  </div>
+</section>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  FOOTER                                        ║
+     ╚══════════════════════════════════════════════════╝ -->
+<footer>
+  <div class="container">
+    <div class="footer-top">
+      <div>
+        <div class="footer-logo">
+          <div class="nav-logo-icon" style="width:28px;height:28px">
+            <svg viewBox="0 0 16 16" fill="none"><path d="M8 1L15 5V11L8 15L1 11V5L8 1Z" fill="white" opacity="0.9"/></svg>
+          </div>
+          SOLVO
+        </div>
+        <p class="footer-desc">Your all-in-one career operating system. Built in India 🇮🇳 for the world's most ambitious learners and professionals.</p>
+      </div>
+      <div>
+        <div class="footer-col-title">Platform</div>
+        <ul class="footer-links">
+          <li><a href="#">Psychometric Test</a></li>
+          <li><a href="#">Aptitude Test</a></li>
+          <li><a href="#">Career Roadmaps</a></li>
+          <li><a href="#">Job Market Data</a></li>
+          <li><a href="#">Resource Finder</a></li>
+          <li><a href="#">Dashboard</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Compare</div>
+        <ul class="footer-links">
+          <li><a href="#">vs Mindler</a></li>
+          <li><a href="#">vs iDreamCareer</a></li>
+          <li><a href="#">vs roadmap.sh</a></li>
+          <li><a href="#">vs Notion</a></li>
+          <li><a href="#">vs monday.com</a></li>
+          <li><a href="#">vs ClickUp</a></li>
+        </ul>
+      </div>
+      <div>
+        <div class="footer-col-title">Company</div>
+        <ul class="footer-links">
+          <li><a href="#">About</a></li>
+          <li><a href="#">Blog</a></li>
+          <li><a href="#">Changelog</a></li>
+          <li><a href="#">Pricing</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a href="#">Careers</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 SOLVO Technologies Pvt. Ltd.</span>
+      <div class="footer-legal">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+        <a href="#">Refund Policy</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ╔══════════════════════════════════════════════════╗
+     ║  JAVASCRIPT                                    ║
+     ╚══════════════════════════════════════════════════╝ -->
+<script>
+/* ── Custom Cursor ─────────────────────────────── */
+const cursorDot  = document.getElementById('cursor-dot');
+const cursorRing = document.getElementById('cursor-ring');
+const cursorGlow = document.getElementById('cursorGlow');
+let mx=0,my=0,rx=0,ry=0;
+
+window.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  cursorDot.style.left  = mx+'px'; cursorDot.style.top  = my+'px';
+  cursorGlow.style.left = mx+'px'; cursorGlow.style.top = my+'px';
+});
+(function animRing() {
+  rx += (mx-rx)*0.1; ry += (my-ry)*0.1;
+  cursorRing.style.left = rx+'px'; cursorRing.style.top  = ry+'px';
+  requestAnimationFrame(animRing);
+})();
+document.querySelectorAll('a,button,.ft-tab,.se-step,.mk-card,.rv-item,.dv-task').forEach(el => {
+  el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+  el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+});
+
+/* ── Progress bar ──────────────────────────────── */
+const bar = document.getElementById('progress-bar');
+window.addEventListener('scroll', () => {
+  const p = scrollY / (document.documentElement.scrollHeight - innerHeight);
+  bar.style.transform = `scaleX(${p})`;
+});
+
+/* ── Nav scroll ────────────────────────────────── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => nav.classList.toggle('scrolled', scrollY > 40));
+
+/* ── 3D Hero App tilt on mouse ─────────────────── */
+const heroApp = document.getElementById('heroApp');
+const appWrap = document.querySelector('.hero-app-wrap');
+if (appWrap) {
+  appWrap.addEventListener('mousemove', e => {
+    const r = appWrap.getBoundingClientRect();
+    const cx = r.left + r.width/2, cy = r.top + r.height/2;
+    const rx = ((e.clientY-cy)/r.height)*14;
+    const ry = ((e.clientX-cx)/r.width)*-14;
+    heroApp.style.transform = `rotateX(${rx}deg) rotateY(${ry}deg)`;
+  });
+  appWrap.addEventListener('mouseleave', () => {
+    heroApp.style.transform = 'rotateX(0) rotateY(0)';
+  });
+}
+
+/* ── Feature tabs ──────────────────────────────── */
+document.querySelectorAll('.ft-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.ft-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.feature-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    const panel = document.querySelector(`[data-panel="${tab.dataset.tab}"]`);
+    if (panel) {
+      panel.classList.add('active');
+      // Re-trigger sr animations
+      panel.querySelectorAll('.sr').forEach(el => {
+        el.classList.remove('in');
+        setTimeout(() => el.classList.add('in'), 50);
+      });
+    }
+  });
+});
+
+/* ── Scroll reveal ─────────────────────────────── */
+const io = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.sr').forEach(el => io.observe(el));
+
+/* ── Counter animation ─────────────────────────── */
+function countUp(el, target, duration=1200) {
+  const start = performance.now();
+  const tick = now => {
+    const p = Math.min(1, (now-start)/duration);
+    const eased = 1 - Math.pow(1-p, 3);
+    el.textContent = Math.floor(eased * target);
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
+}
+const statsSection = document.getElementById('stats-strip');
+let counted = false;
+new IntersectionObserver(entries => {
+  if (entries[0].isIntersecting && !counted) {
+    counted = true;
+    document.querySelectorAll('.count-num').forEach(el => {
+      countUp(el, parseInt(el.dataset.target));
+    });
+  }
+}, { threshold: 0.4 }).observe(statsSection);
+
+/* ── Magnetic button effect ────────────────────── */
+document.querySelectorAll('.btn-mag').forEach(btn => {
+  btn.addEventListener('mousemove', e => {
+    const r = btn.getBoundingClientRect();
+    const cx = r.left+r.width/2, cy = r.top+r.height/2;
+    const dx = (e.clientX-cx)*0.28, dy = (e.clientY-cy)*0.28;
+    btn.style.transform = `translate(${dx}px,${dy}px)`;
+  });
+  btn.addEventListener('mouseleave', () => {
+    btn.style.transform = 'translate(0,0)';
+  });
+});
+
+/* ── Initialise active panel sr ────────────────── */
+document.querySelector('.feature-panel.active')?.querySelectorAll('.sr').forEach(el => {
+  setTimeout(() => el.classList.add('in'), 300);
+});
+</script>
+</body>
+</html>
